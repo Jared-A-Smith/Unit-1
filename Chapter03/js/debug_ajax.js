@@ -1,35 +1,22 @@
+//create function used to fetch geojson data and return file as json. This function also displays the json string to screen.
 function jsAjax(){
-    //define a variable to hold the data
-    // var myData;
 
-    //basic fetch
+    //fetch MegaCities geojson file 
     fetch('data/MegaCities.geojson')
+        //convert file to json format
         .then(function(response){
+            //return json file to function to be used in callback
             return response.json();
         }) 
-        
+        //call callback function
         .then(callback)
-        // .then(function(response){
-        //     myData = response;
-
-        //     //check the data
-        //     console.log(myData)
-        // }) 
-
-    //check the data
-    // console.log(myData)
 };
+//callback function utilizing previously converted json which was returned during the initial function during fetch
 function callback(response){
-    // var myData = response;
+    //Create myData variable to assign json data. This variable is later used to create string for display
     myData = response; // NEW
-    // myDataString = JSON.stringify(myData);
-    // console.log(response) // NEW
-    // console.log(JSON.stringify(myData))
-    // console.log(myDataString);
-    document.querySelector("#mydiv").insertAdjacentHTML('beforeend', '<br> GeoJSON data:<br>' + JSON.stringify(myData));
-    // document.querySelector("#mydiv").insertAdjacentHTML('beforeend', JSON.stringify(myData));
-    
+    //select "mydiv" element from HTML and insert MegaCities Json as a string. This allows the data to be displayed to the screen
+    document.querySelector("#mydiv").insertAdjacentHTML('beforeend', '<br> GeoJSON data:<br>' + JSON.stringify(myData));    
 }
-// document.querySelector("#mydiv").insertAdjacentHTML('beforeend', '<br>GeoJSON data:<br>' + JSON.stringify(myData));
 
 document.addEventListener('DOMContentLoaded',jsAjax)

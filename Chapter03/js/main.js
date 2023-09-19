@@ -1,47 +1,150 @@
-// Add all scripts to the JS folder
-function jsAjax(){
-    var myData;
-    //NOTE: STEP 1: Create the data request
-//NOTE:  var request = new Request('data/MegaCities.geojson'); // <--SIMPLIFIED BELOW--> REQUEST OBJECT 'data/MegaCities.geojson' can be defined in the fectch() method
-    fetch('data/MegaCities.geojson')
-//NOTE:      .then(conversion) // convert data to usable form  //<<-- SIMPLIFIED BELOW--> BY PROCESSING CONVERSION DIRECTLY TO THE .then()
-        .then(function(response){
-           return response.json();
-        })
-/*        .then(function(response){ //<-----Data WILL log to console BECAUSE the variable is being called within the fetch AFTER data is "fetched"
-            myData = response; //<-----Data WILL log to console BECAUSE the variable is being called within the fetch AFTER data is "fetched"
-            // CHECK THE DATA
-            console.log(myData); //<-----Data WILL log to console BECAUSE the variable is being called within the fetch AFTER data is "fetched"
-        })*/ //<-----Data WILL log to console BECAUSE the variable is being called within the fetch AFTER data is "fetched"
-        .then(callback) //send retrieved data to a callback function
-//CHECK THE DATA 
-// console.log(myData); //<------- Data WILL log "undefined" to console BECAUSE the variable is called BEFORE the data "fetch" is completed
-};
-
-// -------------------------------------------------------------------------------------------
-    //NOTE: STEP 2: Define Fetch parameter
-/*      var init = { //(NOTE)=///////<---SIMPLIFICATION IN STEP 1 ABOVE ELIMINATES THE NEED TO DEFINE INIT VARIABLE SINCE GET IS THE DEFAULT
-            method: 'GET' //(NOTE)=///////// ^^^<---SIMPLIFICATION IN STEP 1 ABOVE ELIMINATES THE NEED TO DEFINE INIT VARIABLE SINCE GET IS THE DEFAULT
-        }*/ //(NOTE)=////////^<---SIMPLIFICATION IN STEP 1 ABOVE ELIMINATES THE NEED TO DEFINE INIT VARIABLE SINCE GET IS THE DEFAULT
-
-// -------------------------------------------------------------------------------------------
-    //NOTE: STEP 3: Use Fetch to retrieve the data
-/*      fetch(request,init) //(NOTE)=///////<---SIMPLIFICATION IN STEP 1 FETCHES DIRECTLY AND ELIMIATES THE NEED FOR SEPARATE FETCH AN SETP 4 & 5 IN THIS SEGMENT OF CODE
-            .then(conversion) //(NOTE)=//STEP 4: Convert data to a usable form
-            .then(callback)*/ //(NOTE)=// STEP 5: Send retrieved data to a callback function
-// }; <<---- PREVIOUS CLOSING BRACKET FOR jsAjax FUNCTION
-
-//NOTE: DEFINE CONVERSION CALLBACK FUNCTION ///////////<---SIMPLIFICATION IN STEP 1, USES ANYNOMOUS FUNCTION THE THE .THEN() TO CONVERT DATA TO USABLE FORM
-/*  function conversion(response){ //(NOTE):///////////<---SIMPLIFICATION IN STEP 1, USES ANYNOMOUS FUNCTION THE THE .THEN() TO CONVERT DATA TO USABLE FORM
-    // convert data to usable form (NOTE):///////////<---SIMPLIFICATION IN STEP 1, USES ANYNOMOUS FUNCTION THE THE .THEN() TO CONVERT DATA TO USABLE FORM
-        return response.json();  (NOTE):///////////<---SIMPLIFICATION IN STEP 1, USES ANYNOMOUS FUNCTION THE THE .THEN() TO CONVERT DATA TO USABLE FORM
-    }*/ //(NOTE):///////////<---SIMPLIFICATION IN STEP 1, USES ANYNOMOUS FUNCTION THE THE .THEN() TO CONVERT DATA TO USABLE FORM
-
-//NOTE:define callback function
-function callback(response){
-    // tasks usinig the data GO HERE
-    /*console.log(JSON.stringify(response));*/ // (NOTE) = // converts MegaCities.geojson object to a string
-    console.log(response);
+// initialize cities function 
+function initialize(){
+	cities();
+	// addEvents();
 }
 
-window.onload = jsAjax();
+// function to create cities table which will include city names & population
+function cities(){
+// City array which contains objects with city and population info
+var cityPop = [
+	{ 
+		city: 'Madison',
+		population: 233209
+	},
+	{
+		city: 'Milwaukee',
+		population: 594833
+	},
+	{
+		city: 'Green Bay',
+		population: 104057
+	},
+	{
+		city: 'Superior',
+		population: 27244
+	}
+];
+
+// ------CREATE TABLE --------------------------------------------------------------------------------
+// Create table with data identifying city names and population
+var table = document.createElement("table");
+
+//create a header row
+var headerRow = document.createElement("tr");
+
+//add the row to the table
+table.appendChild(headerRow);
+
+//add the "City" and "Population" columns to the header row
+headerRow.insertAdjacentHTML("beforeend","<th>City</th><th>Population</th>")
+
+// LOOP THROUGH cityPop ARRAY ADDING DATA TO TABLE----------------------------------------------------
+for(var i = 0; i < cityPop.length; i++){
+	//assign longer html strings to a variable
+	var rowHtml = "<tr><td>" + cityPop[i].city + "</td><td>" + cityPop[i].population + "</td></tr>";
+	//add the row's html string to the table
+	table.insertAdjacentHTML('beforeend',rowHtml);
+	document.querySelector("#mydiv").appendChild(table);
+};
+addColumns(cityPop);
+};
+
+// LOOP TO CREATE NEW COLUMN FOR City Size-------------------------------------------------------------
+console.log('Before forEach Loop');
+function addColumns(cityPop){
+	//create variable which is selecting all table row elements
+    var rows = document.querySelectorAll("tr");
+    document.querySelectorAll("tr").forEach(function(row, i){
+		//if row == 0 create header row with City Size label
+		if (i == 0){
+			
+    		row.insertAdjacentHTML('beforeend', '<th>City Size</th>');
+		// if row does not == 0, run else, if, and else if statements to assign city size
+    	} else {
+			//create citySize variabe to be populated by for each loop and to be used in insertAdjacentHTML
+    		var citySize;
+			//if cityPop is less than 100000 assign "small"
+    		if (cityPop[i-1].population < 100000){
+    			citySize = 'Small';
+			//if cityPop is less than 500000 assign "medium"
+    		} else if (cityPop[i-1].population < 500000){
+    			citySize = 'Medium';
+			//if cityPop is greater than 500000 assign "large"
+    		} else {
+    			citySize = 'Large';
+    		};
+			//console.log used check work
+			console.log(citySize);
+			//insert "row" result into the table beneath citySize header
+			row.insertAdjacentHTML("beforeend",'<td>' + citySize + '</td>');
+    	};
+		addEvents();
+    });
+};
+//console.log used to check work
+console.log("After forEach Loop");
+//console.log used to check work
+console.log("Before Event")
+// Create addEvents function listening for mousover action 
+function addEvents(){
+	//Select table element and add mouseover event listener with function to hange color as you mouse over the table.
+	document.querySelector("table").addEventListener("mouseover", function(){
+		//craete color variable
+		var color;
+		//assign default rgb value to color variable
+		var color = "rgb(";
+		
+		//loop through color variable assigning random colors to the table element
+		for (var i=0; i<3; i++){
+
+			var random = Math.round(Math.random() * 255);
+
+			color += random;
+
+			if (i<2){
+				color += ",";
+			
+			} else {
+				color += ")";
+				}
+    		};
+		//console.log used to check work
+		console.log(color);
+		//apply style to table
+		document.querySelector("table").style.color = color;
+		//create click me event with an alert notifying user that they clicked feature
+		document.querySelector("table").addEventListener("click", function(){
+			alert('Hey, you clicked me!');
+		})
+		});
+	//console.log to check work
+	console.log("after click me")
+};
+
+//create function used to fetch geojson data and return file as json. This function also displays the json string to screen.
+function jsAjax(){
+
+    //fetch MegaCities geojson file 
+    fetch('data/MegaCities.geojson')
+        //convert file to json format
+        .then(function(response){
+            //return json file to function to be used in callback
+            return response.json();
+        }) 
+        //call callback function
+        .then(callback)
+};
+//callback function utilizing previously converted json which was returned during the initial function during fetch
+function callback(response){
+    //Create myData variable to assign json data. This variable is later used to create string for display
+    myData = response; // NEW
+    //select "mydiv" element from HTML and insert MegaCities Json as a string. This allows the data to be displayed to the screen
+    document.querySelector("#mydiv").insertAdjacentHTML('beforeend', '<br> GeoJSON data:<br>' + JSON.stringify(myData));    
+}
+
+// document.addEventListener('DOMContentLoaded',jsAjax)
+
+
+document.addEventListener('DOMContentLoaded', initialize);
+document.addEventListener('DOMContentLoaded',jsAjax);
